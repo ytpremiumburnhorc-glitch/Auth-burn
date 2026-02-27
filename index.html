@@ -4,180 +4,260 @@
   <title>Cookie Toolkit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       background: linear-gradient(-45deg, #0f172a, #1e293b, #0ea5e9, #9333ea);
       background-size: 400% 400%;
-      animation: gradientMove 12s ease infinite;
+      animation: bg 12s ease infinite;
       color: white;
-      overflow: hidden;
     }
 
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Fade + Slide Animation */
-    @keyframes fadeSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes bg {
+      0% { background-position:0% 50%; }
+      50% { background-position:100% 50%; }
+      100% { background-position:0% 50%; }
     }
 
     .card {
-      width: 90%;
-      max-width: 650px;
-      padding: 35px;
-      border-radius: 25px;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(25px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      width: 95%;
+      max-width: 500px;
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.2);
       text-align: center;
-      animation: fadeSlideUp 0.8s ease forwards;
     }
 
-    h1 {
-      margin-bottom: 20px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      animation: fadeSlideUp 1s ease forwards;
-    }
-
-    textarea {
+    input, textarea {
       width: 100%;
-      height: 130px;
-      border-radius: 15px;
-      padding: 15px;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
       border: none;
-      font-size: 14px;
-      resize: none;
       outline: none;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      animation: fadeSlideUp 1.2s ease forwards;
     }
 
-    textarea::placeholder {
-      color: rgba(255,255,255,0.6);
-    }
+    textarea { height: 100px; resize: none; }
 
-    .btn {
-      margin-top: 15px;
-      padding: 12px 25px;
-      border-radius: 15px;
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
       border: none;
-      font-weight: 600;
+      font-weight: bold;
       cursor: pointer;
-      transition: 0.2s ease;
-      animation: fadeSlideUp 1.4s ease forwards;
     }
 
-    .primary {
-      background: linear-gradient(135deg, #00ffcc, #00c3ff);
-      color: black;
-    }
+    .primary { background: linear-gradient(135deg,#00ffcc,#00c3ff); color:black; }
+    .secondary { background: rgba(255,255,255,0.2); color:white; }
 
-    .secondary {
-      background: rgba(255,255,255,0.15);
-      color: white;
-      margin-left: 10px;
-    }
+    .hidden { display:none; }
 
-    .btn:hover {
-      transform: scale(1.05);
-    }
-
-    pre {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 15px;
-      background: rgba(0, 0, 0, 0.4);
-      text-align: left;
-      overflow-x: auto;
-      max-height: 220px;
-      font-size: 13px;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    pre.show {
-      opacity: 1;
-    }
-
-    footer {
-      margin-top: 20px;
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
       font-size: 12px;
-      opacity: 0.6;
-      animation: fadeSlideUp 1.6s ease forwards;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .premium { background: gold; color:black; }
+    .member { background: #00c3ff; color:black; }
+
+    .admin-panel {
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      margin-top: 15px;
+      border-radius: 10px;
+      text-align: left;
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h1>🍪 Cookie Toolkit</h1>
+<!-- LOGIN -->
+<div class="card" id="loginCard">
+  <h2>🔐 Login</h2>
+  <input id="loginUser" placeholder="Username">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button class="primary" onclick="login()">Login</button>
+  <button class="secondary" onclick="showRegister()">Register</button>
+  <p id="loginError" style="color:red;"></p>
+</div>
 
-    <textarea id="cookieInput" placeholder="Paste cookie string here..."></textarea>
+<!-- REGISTER -->
+<div class="card hidden" id="registerCard">
+  <h2>📝 Register</h2>
+  <input id="regUser" placeholder="Username">
+  <input id="regPass" type="password" placeholder="Password">
+  <button class="primary" onclick="register()">Create Account</button>
+  <button class="secondary" onclick="showLogin()">Back to Login</button>
+  <p id="registerError" style="color:red;"></p>
+</div>
 
-    <div>
-      <button class="btn primary" onclick="convertCookie()">Convert</button>
-      <button class="btn secondary" onclick="copyOutput()">Copy</button>
-    </div>
+<!-- MAIN APP -->
+<div class="card hidden" id="mainApp">
+  <h2>🍪 Cookie Toolkit</h2>
+  <div id="userInfo"></div>
 
-    <pre id="output"></pre>
+  <textarea id="cookieInput" placeholder="Paste cookie..."></textarea>
+  <button class="primary" onclick="convertCookie()">Convert</button>
+  <button class="secondary" onclick="requestPremium()">Request Premium</button>
+  <button class="secondary" onclick="logout()">Logout</button>
 
-    <footer>Modern Glass UI • Smooth Animations ✨</footer>
-  </div>
+  <pre id="output"></pre>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" class="admin-panel hidden"></div>
+</div>
 
 <script>
-function convertCookie() {
-  const input = document.getElementById("cookieInput").value.trim();
-  const output = document.getElementById("output");
+const ADMIN_USER = "adminBURN";
+const ADMIN_PASS = "HDSzRCv5";
 
-  if (!input) {
-    output.textContent = "⚠️ Please paste a cookie string.";
-    output.classList.add("show");
+let currentUser = null;
+
+function showRegister() {
+  loginCard.classList.add("hidden");
+  registerCard.classList.remove("hidden");
+}
+
+function showLogin() {
+  registerCard.classList.add("hidden");
+  loginCard.classList.remove("hidden");
+}
+
+function register() {
+  const user = regUser.value.trim();
+  const pass = regPass.value.trim();
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  if (users.find(u => u.username === user)) {
+    registerError.textContent = "Username exists.";
     return;
   }
 
-  const pairs = input.split(";");
-  const obj = {};
+  users.push({ username:user, password:pass, role:"member", premium:false });
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("Account created!");
+  showLogin();
+}
 
-  pairs.forEach(pair => {
+function login() {
+  const user = loginUser.value.trim();
+  const pass = loginPass.value.trim();
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    currentUser = { username:user, role:"admin", premium:true };
+    showApp();
+    return;
+  }
+
+  const found = users.find(u => u.username===user && u.password===pass);
+  if (!found) {
+    loginError.textContent = "Invalid login.";
+    return;
+  }
+
+  currentUser = found;
+  showApp();
+}
+
+function showApp() {
+  loginCard.classList.add("hidden");
+  registerCard.classList.add("hidden");
+  mainApp.classList.remove("hidden");
+
+  userInfo.innerHTML = `
+    <strong>${currentUser.username}</strong><br>
+    <span class="badge ${currentUser.premium ? 'premium' : 'member'}">
+      ${currentUser.premium ? 'Premium Member ⭐' : 'Member'}
+    </span>
+  `;
+
+  if (currentUser.role === "admin") {
+    showAdminPanel();
+  }
+}
+
+function requestPremium() {
+  if (currentUser.premium) {
+    alert("You are already premium.");
+    return;
+  }
+
+  let requests = JSON.parse(localStorage.getItem("premiumRequests")) || [];
+  requests.push(currentUser.username);
+  localStorage.setItem("premiumRequests", JSON.stringify(requests));
+  alert("Premium request sent to admin.");
+}
+
+function showAdminPanel() {
+  adminPanel.classList.remove("hidden");
+  let requests = JSON.parse(localStorage.getItem("premiumRequests")) || [];
+
+  if (!requests.length) {
+    adminPanel.innerHTML = "<strong>No premium requests.</strong>";
+    return;
+  }
+
+  adminPanel.innerHTML = "<strong>Premium Requests:</strong><br>";
+  requests.forEach(user=>{
+    adminPanel.innerHTML += `
+      ${user}
+      <button onclick="approve('${user}')">Approve</button><br>
+    `;
+  });
+}
+
+function approve(username) {
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let requests = JSON.parse(localStorage.getItem("premiumRequests")) || [];
+
+  users = users.map(u=>{
+    if (u.username === username) u.premium = true;
+    return u;
+  });
+
+  requests = requests.filter(u=>u!==username);
+
+  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.setItem("premiumRequests", JSON.stringify(requests));
+  alert(username + " is now Premium!");
+  showAdminPanel();
+}
+
+function convertCookie() {
+  const input = cookieInput.value.trim();
+  if (!input) return;
+
+  const obj = {};
+  input.split(";").forEach(pair=>{
     const parts = pair.trim().split("=");
-    if (parts.length >= 2) {
-      const key = parts.shift().trim();
-      const value = parts.join("=").trim();
-      obj[key] = value;
+    if (parts.length>=2) {
+      const key=parts.shift();
+      obj[key]=parts.join("=");
     }
   });
 
-  output.textContent = JSON.stringify(obj, null, 2);
-  output.classList.add("show");
+  output.textContent = JSON.stringify(obj,null,2);
 }
 
-function copyOutput() {
-  const text = document.getElementById("output").textContent;
-  if (!text) return;
-  navigator.clipboard.writeText(text);
-  alert("Copied to clipboard!");
+function logout() {
+  location.reload();
 }
 </script>
 
