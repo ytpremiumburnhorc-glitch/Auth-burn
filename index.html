@@ -19,12 +19,25 @@
       background-size: 400% 400%;
       animation: gradientMove 12s ease infinite;
       color: white;
+      overflow: hidden;
     }
 
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
+    }
+
+    /* Fade + Slide Animation */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .card {
@@ -34,21 +47,17 @@
       border-radius: 25px;
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
       text-align: center;
-      transition: 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
+      animation: fadeSlideUp 0.8s ease forwards;
     }
 
     h1 {
       margin-bottom: 20px;
       font-weight: 600;
       letter-spacing: 1px;
+      animation: fadeSlideUp 1s ease forwards;
     }
 
     textarea {
@@ -62,7 +71,7 @@
       outline: none;
       background: rgba(255, 255, 255, 0.1);
       color: white;
-      backdrop-filter: blur(10px);
+      animation: fadeSlideUp 1.2s ease forwards;
     }
 
     textarea::placeholder {
@@ -77,6 +86,7 @@
       font-weight: 600;
       cursor: pointer;
       transition: 0.2s ease;
+      animation: fadeSlideUp 1.4s ease forwards;
     }
 
     .primary {
@@ -103,19 +113,26 @@
       overflow-x: auto;
       max-height: 220px;
       font-size: 13px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    pre.show {
+      opacity: 1;
     }
 
     footer {
       margin-top: 20px;
       font-size: 12px;
       opacity: 0.6;
+      animation: fadeSlideUp 1.6s ease forwards;
     }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h1>Netflix gen 🖥️</h1>
+    <h1>🍪 Cookie Toolkit</h1>
 
     <textarea id="cookieInput" placeholder="Paste cookie string here..."></textarea>
 
@@ -126,7 +143,7 @@
 
     <pre id="output"></pre>
 
-    <footer>Modern Glass UI • Powered by Vercel 🚀</footer>
+    <footer>Modern Glass UI • Smooth Animations ✨</footer>
   </div>
 
 <script>
@@ -135,7 +152,8 @@ function convertCookie() {
   const output = document.getElementById("output");
 
   if (!input) {
-    output.textContent = "⚠️ Please paste a cookie.";
+    output.textContent = "⚠️ Please paste a cookie string.";
+    output.classList.add("show");
     return;
   }
 
@@ -152,12 +170,12 @@ function convertCookie() {
   });
 
   output.textContent = JSON.stringify(obj, null, 2);
+  output.classList.add("show");
 }
 
 function copyOutput() {
   const text = document.getElementById("output").textContent;
   if (!text) return;
-
   navigator.clipboard.writeText(text);
   alert("Copied to clipboard!");
 }
