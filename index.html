@@ -1,55 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cookie Converter</title>
+  <title>Cookie Toolkit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       color: white;
-      text-align: center;
-      padding: 20px;
     }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
     textarea {
       width: 100%;
-      max-width: 600px;
       height: 120px;
-      border-radius: 8px;
-      padding: 10px;
+      border-radius: 12px;
+      padding: 12px;
       border: none;
       font-size: 14px;
-      margin-top: 10px;
+      resize: none;
+      outline: none;
     }
+
     button {
       margin-top: 15px;
       padding: 10px 20px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       background: #00ff99;
-      font-size: 16px;
+      color: black;
+      font-weight: bold;
       cursor: pointer;
+      transition: 0.2s ease;
     }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
     pre {
-      background: #1e293b;
+      background: #0f172a;
       padding: 15px;
-      border-radius: 8px;
+      border-radius: 12px;
       text-align: left;
-      max-width: 600px;
-      margin: 20px auto;
+      margin-top: 20px;
       overflow-x: auto;
+      max-height: 200px;
+    }
+
+    .copy-btn {
+      background: #3b82f6;
+      color: white;
+      margin-top: 10px;
+    }
+
+    footer {
+      margin-top: 15px;
+      font-size: 12px;
+      opacity: 0.6;
     }
   </style>
 </head>
 <body>
 
-  <h1>🍪 Cookie → JSON Converter</h1>
+  <div class="card">
+    <h1>🍪 Cookie Toolkit</h1>
 
-  <textarea id="cookieInput" placeholder="Paste cookie string here..."></textarea>
-  <br>
-  <button onclick="convertCookie()">Convert to JSON</button>
+    <textarea id="cookieInput" placeholder="Paste cookie string here..."></textarea>
 
-  <pre id="output"></pre>
+    <button onclick="convertCookie()">Convert to JSON</button>
+
+    <pre id="output"></pre>
+
+    <button class="copy-btn" onclick="copyOutput()">Copy JSON</button>
+
+    <footer>Built with Vercel 🚀</footer>
+  </div>
 
 <script>
 function convertCookie() {
@@ -61,23 +107,27 @@ function convertCookie() {
     return;
   }
 
-  try {
-    const pairs = input.split(";");
-    const obj = {};
+  const pairs = input.split(";");
+  const obj = {};
 
-    pairs.forEach(pair => {
-      const parts = pair.trim().split("=");
-      if (parts.length >= 2) {
-        const key = parts.shift().trim();
-        const value = parts.join("=").trim();
-        obj[key] = value;
-      }
-    });
+  pairs.forEach(pair => {
+    const parts = pair.trim().split("=");
+    if (parts.length >= 2) {
+      const key = parts.shift().trim();
+      const value = parts.join("=").trim();
+      obj[key] = value;
+    }
+  });
 
-    output.textContent = JSON.stringify(obj, null, 2);
-  } catch (err) {
-    output.textContent = "❌ Invalid cookie format.";
-  }
+  output.textContent = JSON.stringify(obj, null, 2);
+}
+
+function copyOutput() {
+  const text = document.getElementById("output").textContent;
+  if (!text) return;
+
+  navigator.clipboard.writeText(text);
+  alert("Copied to clipboard!");
 }
 </script>
 
