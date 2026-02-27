@@ -6,6 +6,12 @@
   <style>
     * { box-sizing: border-box; }
 
+    hr {
+  border: none;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+}
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -87,14 +93,16 @@
 </head>
 <body>
 
-<div>
-  <input type="email" id="email" placeholder="Enter email">
-  <button onclick="insertUser()">Submit</button>
-</div>
-  
 <!-- LOGIN -->
 <div class="card" id="loginCard">
   <h2>🔐 Login</h2>
+
+  <!-- Supabase Email Insert -->
+  <input type="email" id="email" placeholder="Enter email">
+  <button class="secondary" onclick="insertUser()">Submit Email</button>
+
+  <hr style="margin:15px 0; opacity:0.3;">
+
   <input id="loginUser" placeholder="Username">
   <input id="loginPass" type="password" placeholder="Password">
   <button class="primary" onclick="login()">Login</button>
