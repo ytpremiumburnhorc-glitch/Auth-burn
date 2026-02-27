@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cookie Checker</title>
+  <title>Cookie Converter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -13,12 +13,13 @@
     }
     textarea {
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       height: 120px;
       border-radius: 8px;
       padding: 10px;
       border: none;
       font-size: 14px;
+      margin-top: 10px;
     }
     button {
       margin-top: 15px;
@@ -29,41 +30,53 @@
       font-size: 16px;
       cursor: pointer;
     }
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
+    pre {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: left;
+      max-width: 600px;
+      margin: 20px auto;
+      overflow-x: auto;
     }
   </style>
 </head>
 <body>
 
-  <h1>🍪 Cookie Checker</h1>
+  <h1>🍪 Cookie → JSON Converter</h1>
 
-  <textarea id="cookieInput" placeholder="Paste your cookie string here..."></textarea>
+  <textarea id="cookieInput" placeholder="Paste cookie string here..."></textarea>
   <br>
-  <button onclick="checkCookie()">Check Cookie</button>
+  <button onclick="convertCookie()">Convert to JSON</button>
 
-  <div class="result" id="result"></div>
+  <pre id="output"></pre>
 
 <script>
-function checkCookie() {
+function convertCookie() {
   const input = document.getElementById("cookieInput").value.trim();
-  const result = document.getElementById("result");
+  const output = document.getElementById("output");
 
   if (!input) {
-    result.innerHTML = "⚠️ Please paste a cookie.";
-    result.style.color = "orange";
+    output.textContent = "⚠️ Please paste a cookie string.";
     return;
   }
 
-  // Basic validation (must contain = and ;)
-  if (input.includes("=") && input.includes(";")) {
-    result.innerHTML = "✅ Cookie format looks valid.";
-    result.style.color = "#00ff99";
-  } else {
-    result.innerHTML = "❌ Invalid cookie format.";
-    result.style.color = "red";
+  try {
+    const pairs = input.split(";");
+    const obj = {};
+
+    pairs.forEach(pair => {
+      const parts = pair.trim().split("=");
+      if (parts.length >= 2) {
+        const key = parts.shift().trim();
+        const value = parts.join("=").trim();
+        obj[key] = value;
+      }
+    });
+
+    output.textContent = JSON.stringify(obj, null, 2);
+  } catch (err) {
+    output.textContent = "❌ Invalid cookie format.";
   }
 }
 </script>
