@@ -103,20 +103,25 @@
 
   <hr style="margin:15px 0; opacity:0.3;">
 
-  <input id="loginUser" placeholder="Username">
-  <input id="loginPass" type="password" placeholder="Password">
-  <button class="primary" onclick="login()">Login</button>
-  <button class="secondary" onclick="showRegister()">Register</button>
-  <p id="loginError" style="color:red;"></p>
+  <input id="loginUser" type="email" placeholder="Email">
+<input id="loginPass" type="password" placeholder="Password">
+
+<button class="primary" onclick="login()">Login</button>
+<button class="secondary" onclick="showRegister()">Register</button>
+
+<p id="loginError" style="color:red;"></p>
 </div>
 
 <!-- REGISTER -->
 <div class="card hidden" id="registerCard">
   <h2>📝 Register</h2>
-  <input id="regUser" placeholder="Username">
+
+  <input id="regUser" type="email" placeholder="Email">
   <input id="regPass" type="password" placeholder="Password">
-  <button class="primary" onclick="register()">Create Account</button>
+
+  <button class="primary" onclick="register()">Register</button>
   <button class="secondary" onclick="showLogin()">Back to Login</button>
+
   <p id="registerError" style="color:red;"></p>
 </div>
 
@@ -132,15 +137,10 @@
 
   <pre id="output"></pre>
 
-  <!-- ADMIN PANEL -->
-  <div id="adminPanel" class="admin-panel hidden"></div>
 </div>
 
+  
 <script>
-const ADMIN_USER = "adminBURN";
-const ADMIN_PASS = "HDSzRCv5";
-
-let currentUser = null;
 
 function showRegister() {
   loginCard.classList.add("hidden");
@@ -152,105 +152,23 @@ function showLogin() {
   loginCard.classList.remove("hidden");
 }
 
-function register() {
-  const user = regUser.value.trim();
-  const pass = regPass.value.trim();
-  let users = JSON.parse(localStorage.getItem("users")) || [];
+async function register() {
+  const email = registerUser.value.trim();
+  const password = registerPass.value.trim();
 
-  if (users.find(u => u.username === user)) {
-    registerError.textContent = "Username exists.";
-    return;
-  }
-
-  users.push({ username:user, password:pass, role:"member", premium:false });
-  localStorage.setItem("users", JSON.stringify(users));
-  alert("Account created!");
-  showLogin();
-}
-
-function login() {
-  const user = loginUser.value.trim();
-  const pass = loginPass.value.trim();
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  if (user === ADMIN_USER && pass === ADMIN_PASS) {
-    currentUser = { username:user, role:"admin", premium:true };
-    showApp();
-    return;
-  }
-
-  const found = users.find(u => u.username===user && u.password===pass);
-  if (!found) {
-    loginError.textContent = "Invalid login.";
-    return;
-  }
-
-  currentUser = found;
-  showApp();
-}
-
-function showApp() {
-  loginCard.classList.add("hidden");
-  registerCard.classList.add("hidden");
-  mainApp.classList.remove("hidden");
-
-  userInfo.innerHTML = `
-    <strong>${currentUser.username}</strong><br>
-    <span class="badge ${currentUser.premium ? 'premium' : 'member'}">
-      ${currentUser.premium ? 'Premium Member ⭐' : 'Member'}
-    </span>
-  `;
-
-  if (currentUser.role === "admin") {
-    showAdminPanel();
-  }
-}
-
-function requestPremium() {
-  if (currentUser.premium) {
-    alert("You are already premium.");
-    return;
-  }
-
-  let requests = JSON.parse(localStorage.getItem("premiumRequests")) || [];
-  requests.push(currentUser.username);
-  localStorage.setItem("premiumRequests", JSON.stringify(requests));
-  alert("Premium request sent to admin.");
-}
-
-function showAdminPanel() {
-  adminPanel.classList.remove("hidden");
-  let requests = JSON.parse(localStorage.getItem("premiumRequests")) || [];
-
-  if (!requests.length) {
-    adminPanel.innerHTML = "<strong>No premium requests.</strong>";
-    return;
-  }
-
-  adminPanel.innerHTML = "<strong>Premium Requests:</strong><br>";
-  requests.forEach(user=>{
-    adminPanel.innerHTML += `
-      ${user}
-      <button onclick="approve('${user}')">Approve</button><br>
-    `;
-  });
-}
-
-function approve(username) {
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  let requests = JSON.parse(localStorage.getItem("premiumRequests")) || [];
-
-  users = users.map(u=>{
-    if (u.username === username) u.premium = true;
-    return u;
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password
   });
 
-  requests = requests.filter(u=>u!==username);
+  if (error) {
+    alert("Error: " + error.message);
+  } else {
+    alert("Real account created!");
+    showLogin();
+  }
 
-  localStorage.setItem("users", JSON.stringify(users));
-  localStorage.setItem("premiumRequests", JSON.stringify(requests));
-  alert(username + " is now Premium!");
-  showAdminPanel();
+
 }
 
 function convertCookie() {
@@ -282,22 +200,24 @@ function logout() {
 
   const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-  async function insertUser() {
-    const email = document.getElementById("email").value
+  async function register() {
 
-    const { data, error } = await supabase
-      .from("Users")
-      .insert([
-        { email: email }
-      ])
+  const email = document.getElementById("regUser").value.trim();
+  const password = document.getElementById("regPass").value.trim();
 
-    if (error) {
-      alert("Error: " + error.message)
-    } else {
-      alert("Inserted successfully!")
-      console.log(data)
-    }
+  const { data, error } = await supabase
+    .from("Users")
+    .insert([
+      { email: email, password: password }
+    ]);
+
+  if (error) {
+    alert("Error: " + error.message);
+  } else {
+    alert("Inserted successfully!");
+    console.log(data);
   }
+}
 </script>
 
 </body>
