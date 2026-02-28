@@ -143,15 +143,28 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script>
-    alert("Script loaded!");
-  const supabaseUrl = "https://fgqgnrhmckssuwflwihv.supabase.co"
-  const supabaseKey = "sb_publishable_HC_Bypejn-Z6g49rLE8wlA_b0xJln19"
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
-  const loginCard = document.getElementById("loginCard");
-  const registerCard = document.getElementById("registerCard");
-  const mainApp = document.getElementById("mainApp");
-  async function register() {
+<script>
+alert("Script loaded!");
+
+const supabaseUrl = "https://fgqgnrhmckssuwflwihv.supabase.co";
+const supabaseKey = "sb_publishable_HC_Bypejn-Z6g49rLE8wlA_b0xJln19";
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+const loginCard = document.getElementById("loginCard");
+const registerCard = document.getElementById("registerCard");
+const mainApp = document.getElementById("mainApp");
+
+function showRegister() {
+  loginCard.classList.add("hidden");
+  registerCard.classList.remove("hidden");
+}
+
+function showLogin() {
+  registerCard.classList.add("hidden");
+  loginCard.classList.remove("hidden");
+}
+
+async function register() {
   alert("Button clicked!");
 
   const email = document.getElementById("regUser").value.trim();
@@ -168,6 +181,27 @@
     alert("Account created! Check your email.");
     console.log(data);
   }
+}
+
+function convertCookie() {
+  const input = document.getElementById("cookieInput").value.trim();
+  if (!input) return;
+
+  const obj = {};
+  input.split(";").forEach(pair => {
+    const parts = pair.trim().split("=");
+    if (parts.length >= 2) {
+      const key = parts.shift();
+      obj[key] = parts.join("=");
+    }
+  });
+
+  document.getElementById("output").textContent =
+    JSON.stringify(obj, null, 2);
+}
+
+function logout() {
+  location.reload();
 }
 </script>
   
