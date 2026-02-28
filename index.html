@@ -99,14 +99,14 @@
 
   <!-- Supabase Email Insert -->
   <input type="email" id="email" placeholder="Enter email">
-  <button class="secondary" onclick="insertUser()">Submit Email</button>
+  <button class="secondary">Submit Email</button>
 
   <hr style="margin:15px 0; opacity:0.3;">
 
   <input id="loginUser" type="email" placeholder="Email">
 <input id="loginPass" type="password" placeholder="Password">
 
-<button class="primary" onclick="login()">Login</button>
+<button class="primary">Login</button>
 <button class="secondary" onclick="showRegister()">Register</button>
 
 <p id="loginError" style="color:red;"></p>
@@ -204,6 +204,14 @@ function convertCookie() {
 
 function logout() {
   location.reload();
+}
+
+  function insertUser() {
+  alert("InsertUser clicked");
+}
+
+function login() {
+  alert("Login clicked");
 }
 </script>
 
