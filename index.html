@@ -122,6 +122,8 @@
   <button class="primary" onclick="register()">Register</button>
   <button class="secondary" onclick="showLogin()">Back to Login</button>
 
+  <button onclick="register()">Register</button>
+  
   <p id="registerError" style="color:red;"></p>
 </div>
 
@@ -136,9 +138,37 @@
   <button class="secondary" onclick="logout()">Logout</button>
 
   <pre id="output"></pre>
+  
 
 </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+  const supabaseUrl = "https://fgqgnrhmckssuwflwihv.supabase.co"
+  const supabaseKey = "sb_publishable_HC_Bypejn-Z6g49rLE8wlA_b0xJln19"
+
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+  async function register() {
+
+  const email = document.getElementById("regUser").value.trim();
+  const password = document.getElementById("regPass").value.trim();
+
+  const { data, error } = await supabase
+    .from("Users")
+    .insert([
+      { email: email, password: password }
+    ]);
+
+  if (error) {
+    alert("Error: " + error.message);
+  } else {
+    alert("Inserted successfully!");
+    console.log(data);
+  }
+}
+</script>
   
 <script>
 
@@ -154,21 +184,22 @@ function showLogin() {
 
 async function register() {
   alert("Button clicked!");
-  <button onclick="register()">Register</button>
-  const email = registerUser.value.trim();
-  const password = registerPass.value.trim();
+
+  const email = document.getElementById("regUser").value.trim();
+  const password = document.getElementById("regPass").value.trim();
 
   const { data, error } = await supabase.auth.signUp({
-    email,
-    password
+    email: email,
+    password: password
   });
 
   if (error) {
     alert("Error: " + error.message);
   } else {
-    alert("Real account created!");
+    alert("Account created! Check your email.");
     showLogin();
   }
+}
 
 
 }
@@ -194,33 +225,9 @@ function logout() {
 }
 </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
 
-<script>
-  const supabaseUrl = "https://fgqgnrhmckssuwflwihv.supabase.co"
-  const supabaseKey = "sb_publishable_HC_Bypejn-Z6g49rLE8wlA_b0xJln19"
 
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
-
-  async function register() {
-
-  const email = document.getElementById("regUser").value.trim();
-  const password = document.getElementById("regPass").value.trim();
-
-  const { data, error } = await supabase
-    .from("Users")
-    .insert([
-      { email: email, password: password }
-    ]);
-
-  if (error) {
-    alert("Error: " + error.message);
-  } else {
-    alert("Inserted successfully!");
-    console.log(data);
-  }
-}
-</script>
 
 </body>
 </html>
