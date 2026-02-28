@@ -146,10 +146,14 @@
   <pre id="output"></pre>
 
   
-  <div id="adminPanel" class="admin-panel hidden">
+  <div id="adminStats" style="display:none; margin-bottom:10px;">
+  <strong>📊 Dashboard Stats</strong>
+  <div id="statsContent"></div>
+  <hr style="margin:10px 0;">
+
   <strong>Pending Upgrade Requests</strong>
   <div id="pendingList"></div>
-</div>
+
 
 </div>
 
@@ -284,13 +288,34 @@ document.getElementById("userInfo").innerHTML =
     if (profile?.is_premium || profile?.upgrade_requested) {
   document.getElementById("upgradeBtn").style.display = "none";
 }
-      if (profile?.is_admin) {
-  document.getElementById("adminPanel").classList.remove("hidden");
+    if (profile?.is_admin) {
+  document.getElementById("adminStats").style.display = "block";
   loadPendingRequests();
+  loadAdminStats();
 }
+      
 
 } // <-- THIS closes loadUser()
 
+  async function loadAdminStats() {
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .select("*");
+
+  if (error) return;
+
+  const totalUsers = data.length;
+  const premiumUsers = data.filter(u => u.is_premium).length;
+  const pendingUsers = data.filter(u => u.upgrade_requested && !u.is_premium).length;
+  const adminUsers = data.filter(u => u.is_admin).length;
+
+  document.getElementById("statsContent").innerHTML = `
+    👥 Total Users: ${totalUsers} <br>
+    ⭐ Premium Users: ${premiumUsers} <br>
+    ⏳ Pending Requests: ${pendingUsers} <br>
+    👑 Admins: ${adminUsers}
+  `;
+}
 async function checkSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
@@ -349,6 +374,7 @@ async function approveUser(userId) {
     .eq("id", userId);
 
   loadPendingRequests();
+  loadAdminStats(); // refresh dashboard numbers
 }
 
 checkSession();
