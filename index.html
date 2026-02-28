@@ -130,7 +130,7 @@
 
   <textarea id="cookieInput" placeholder="Paste cookie..."></textarea>
   <button class="primary" onclick="convertCookie()">Convert</button>
-  <button class="secondary" onclick="requestPremium()">Request Premium</button>
+  <button id="upgradeBtn" onclick="requestPremium()">Upgrade</button>
   <button class="secondary" onclick="logout()">Logout</button>
 
   <pre id="output"></pre>
@@ -251,8 +251,15 @@ async function login() {
 
   const emailToShow = profile?.email || user.email;
 
-  document.getElementById("userInfo").innerHTML =
-    `<strong>${emailToShow}</strong>`;
+  const badge = profile?.is_premium
+  ? `<span class="badge premium">Premium</span>`
+  : `<span class="badge member">Member</span>`;
+
+document.getElementById("userInfo").innerHTML =
+  `<strong>${emailToShow}</strong><br>${badge}`;
+
+    if (profile?.is_premium) {
+  document.getElementById("upgradeBtn").style.display = "none";
 }
 
   async function checkSession() {
