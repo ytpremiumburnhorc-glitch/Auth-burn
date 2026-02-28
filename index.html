@@ -143,16 +143,19 @@
 </div>
 
   
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 alert("Script loaded!");
   
-console.log("Supabase object:", window.supabase);
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-const supabaseUrl = "https://fgqgnrhmckssuwflwihv.supabase.co";
-const supabaseKey = "sb_publishable_HC_Bypejn-Z6g49rLE8wlA_b0xJln19";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const { createClient } = supabase;
+
+const supabaseClient = createClient(
+  "https://fgqgnrhmckssuwflwihv.supabase.co",
+  "sb_publishable_HC_Bypejn-Z6g49rLE8wlA_b0xJln19"
+);
 
 const loginCard = document.getElementById("loginCard");
 const registerCard = document.getElementById("registerCard");
@@ -174,7 +177,7 @@ window.register = async function () {
   const email = document.getElementById("regUser").value.trim();
   const password = document.getElementById("regPass").value.trim();
 
-  const { data, error } = await supabase.auth.signUp({
+ const { data, error } = await supabaseClient.auth.signUp({
     email: email,
     password: password
   });
