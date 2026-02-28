@@ -188,8 +188,7 @@ window.register = async function () {
     });
   }
 
-  alert("Account created! Check your email.");
-  showLogin();
+  alert("Account created! You can now log in.");
 };
 
 function convertCookie() {
@@ -262,7 +261,9 @@ document.getElementById("userInfo").innerHTML =
   document.getElementById("upgradeBtn").style.display = "none";
 }
 
-  async function checkSession() {
+} // <-- THIS closes loadUser()
+
+async function checkSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     loadUser();
