@@ -185,11 +185,16 @@ async function register() {
   const email = document.getElementById("regUser").value.trim();
   const password = document.getElementById("regPass").value.trim();
 
+  const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password
+  });
+
   if (error) {
     alert("Error: " + error.message);
   } else {
     alert("Account created! Check your email.");
-    showLogin();
+    console.log(data);
   }
 }
 
