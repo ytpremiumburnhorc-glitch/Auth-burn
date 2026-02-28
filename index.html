@@ -204,58 +204,6 @@ function logout() {
   location.reload();
 }
 </script>
-  
-<script>
-
-function showRegister() {
-  loginCard.classList.add("hidden");
-  registerCard.classList.remove("hidden");
-}
-
-function showLogin() {
-  registerCard.classList.add("hidden");
-  loginCard.classList.remove("hidden");
-}
-
-async function register() {
-  alert("Button clicked!");
-}
-  const email = document.getElementById("regUser").value.trim();
-  const password = document.getElementById("regPass").value.trim();
-
-  const { data, error } = await supabase.auth.signUp({
-    email: email,
-    password: password
-  });
-
-  if (error) {
-    alert("Error: " + error.message);
-  } else {
-    alert("Account created! Check your email.");
-    console.log(data);
-  }
-}
-
-function convertCookie() {
-  const input = cookieInput.value.trim();
-  if (!input) return;
-
-  const obj = {};
-  input.split(";").forEach(pair=>{
-    const parts = pair.trim().split("=");
-    if (parts.length>=2) {
-      const key=parts.shift();
-      obj[key]=parts.join("=");
-    }
-  });
-
-  output.textContent = JSON.stringify(obj,null,2);
-}
-
-function logout() {
-  location.reload();
-}
-</script>
 
   
 
