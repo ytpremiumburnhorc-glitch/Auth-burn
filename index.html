@@ -89,6 +89,11 @@
       overflow-y: auto;
       font-size: 13px;
     }
+
+   .admin {
+  background: linear-gradient(135deg, #ff0000, #8b0000);
+  color: white;
+}
   </style>
 </head>
   
@@ -260,9 +265,13 @@ async function login() {
 
   const emailToShow = profile?.email || user.email;
 
-  const badge = profile?.is_premium
-  ? `<span class="badge premium">Premium</span>`
-  : `<span class="badge member">Member</span>`;
+  let badge = `<span class="badge member">Member</span>`;
+
+if (profile?.is_admin) {
+  badge = `<span class="badge admin">Admin</span>`;
+} else if (profile?.is_premium) {
+  badge = `<span class="badge premium">Premium</span>`;
+}
 
 document.getElementById("userInfo").innerHTML =
   `<strong>${emailToShow}</strong><br>${badge}`;
@@ -272,7 +281,7 @@ document.getElementById("userInfo").innerHTML =
     `<br><span class="badge member">Pending Approval</span>`;
     }
 
-    if (profile?.is_premium) {
+    if (profile?.is_premium || profile?.upgrade_requested) {
   document.getElementById("upgradeBtn").style.display = "none";
 }
       if (profile?.is_admin) {
