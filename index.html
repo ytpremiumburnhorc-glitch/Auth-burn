@@ -97,11 +97,7 @@
 <!-- LOGIN -->
 <div class="card" id="loginCard">
   <h2>🔐 Login</h2>
-
-  <!-- Supabase Email Insert -->
-  <input type="email" id="email" placeholder="Enter email">
-  <button class="secondary">Submit Email</button>
-
+ 
   <hr style="margin:15px 0; opacity:0.3;">
 
   <input id="loginUser" type="email" placeholder="Email">
@@ -170,21 +166,30 @@ function showLogin() {
 }
 
 window.register = async function () {
-  
-
   const email = document.getElementById("regUser").value.trim();
   const password = document.getElementById("regPass").value.trim();
 
- const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password
   });
 
   if (error) {
-    alert("Error: " + error.message);
-  } else {
-    alert("Account created! Check your email.");
+    document.getElementById("registerError").textContent = error.message;
+    return;
   }
+
+  if (data.user) {
+    await supabaseClient.from("profiles").insert({
+      id: data.user.id,
+      email: email,
+      is_premium: false,
+      is_admin: false
+    });
+  }
+
+  alert("Account created! Check your email.");
+  showLogin();
 };
 
 function convertCookie() {
@@ -234,7 +239,7 @@ async function login() {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) return;
 
-  const { data: profile } = await supabaseClient
+  const { data: profile, error } = await supabaseClient
     .from("profiles")
     .select("*")
     .eq("id", user.id)
@@ -244,8 +249,10 @@ async function login() {
   registerCard.classList.add("hidden");
   mainApp.classList.remove("hidden");
 
+  const emailToShow = profile?.email || user.email;
+
   document.getElementById("userInfo").innerHTML =
-    `<strong>${profile.email}</strong>`;
+    `<strong>${emailToShow}</strong>`;
 }
 
   async function checkSession() {
