@@ -107,7 +107,7 @@
   <input id="loginUser" type="email" placeholder="Email">
 <input id="loginPass" type="password" placeholder="Password">
 
-<button class="primary">Login</button>
+<button class="primary" onclick="login()">Login</button>
 <button class="secondary" onclick="showRegister()">Register</button>
 
 <p id="loginError" style="color:red;"></p>
@@ -204,7 +204,8 @@ function convertCookie() {
     JSON.stringify(obj, null, 2);
 }
 
-function logout() {
+async function logout() {
+  await supabaseClient.auth.signOut();
   location.reload();
 }
 
@@ -212,9 +213,49 @@ function logout() {
   alert("InsertUser clicked");
 }
 
-function login() {
-  alert("Login clicked");
+async function login() {
+  const email = document.getElementById("loginUser").value.trim();
+  const password = document.getElementById("loginPass").value.trim();
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    document.getElementById("loginError").textContent = error.message;
+  } else {
+    loadUser();
+  }
+
 }
+
+  async function loadUser() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return;
+
+  const { data: profile } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  loginCard.classList.add("hidden");
+  registerCard.classList.add("hidden");
+  mainApp.classList.remove("hidden");
+
+  document.getElementById("userInfo").innerHTML =
+    `<strong>${profile.email}</strong>`;
+}
+
+  async function checkSession() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) {
+    loadUser();
+  }
+}
+
+checkSession();
 </script>
 
   
