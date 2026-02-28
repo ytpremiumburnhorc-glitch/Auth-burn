@@ -152,16 +152,20 @@
   const registerCard = document.getElementById("registerCard");
   const mainApp = document.getElementById("mainApp");
   async function register() {
+  alert("Button clicked!");
 
   const email = document.getElementById("regUser").value.trim();
   const password = document.getElementById("regPass").value.trim();
 
-
+  const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password
+  });
 
   if (error) {
     alert("Error: " + error.message);
   } else {
-    alert("Inserted successfully!");
+    alert("Account created! Check your email.");
     console.log(data);
   }
 }
