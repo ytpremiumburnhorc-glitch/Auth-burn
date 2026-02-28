@@ -141,7 +141,9 @@
 
 </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  console.log("Supabase object:", window.supabase);
+  
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>>
 
 <script>
 alert("Script loaded!");
@@ -164,7 +166,7 @@ function showLogin() {
   loginCard.classList.remove("hidden");
 }
 
-async function register() {
+window.register = async function () {
   alert("Button clicked!");
 
   const email = document.getElementById("regUser").value.trim();
@@ -179,9 +181,8 @@ async function register() {
     alert("Error: " + error.message);
   } else {
     alert("Account created! Check your email.");
-    console.log(data);
   }
-}
+};
 
 function convertCookie() {
   const input = document.getElementById("cookieInput").value.trim();
